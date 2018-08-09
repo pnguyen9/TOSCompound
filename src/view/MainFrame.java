@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import model.Arte;
+import model.Character;
 import model.CharacterArte;
 import model.Compound;
 
@@ -44,11 +45,20 @@ public class MainFrame extends JFrame {
 
 	public MainFrame(List<Arte> artes, List<Character> characters, List<CharacterArte> characterArtes,
 			List<Compound> compounds) {
-		super("TSCompound");
+		super("Tales of Symphonia - Compound artes");
 		this.artes = artes;
 		this.characters = characters;
 		this.characterArtes = characterArtes;
 		this.compounds = compounds;
+
+		// For blank selection purpose
+		Arte blankArte = new Arte(0, " ", false);
+		Arte blankCompoundArte = new Arte(0, " ", true);
+		Character blankCharacter = new Character(0, " ");
+
+		this.artes.add(0, blankArte);
+		this.artes.add(0, blankCompoundArte);
+		this.characters.add(0, blankCharacter);
 	}
 
 	public void initComponents() {
@@ -59,22 +69,30 @@ public class MainFrame extends JFrame {
 		this.firstCharacterLabel = new JLabel("Personnage 1");
 
 		this.firstCharacters = new JComboBox<Character>(this.characters.toArray(new Character[0]));
-		this.firstCharacters.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO
-			}
-		});
+		this.firstCharacters.setRenderer(new NameListCellRenderer());
+		// this.firstCharacters.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// // TODO
+		// }
+		// });
 
 		this.firstCharacterArteLabel = new JLabel("Tech personnage 1");
 
-		this.firstCharacterArtes = new JComboBox<Arte>(this.artes.toArray(new Arte[0]));
-		this.firstCharacterArtes.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO
+		this.firstCharacterArtes = new JComboBox<Arte>();
+		this.firstCharacterArtes.setRenderer(new NameListCellRenderer());
+		// this.firstCharacterArtes.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// // TODO
+		// }
+		// });
+
+		for (Arte arte : artes) {
+			if (!arte.isCompound()) {
+				this.firstCharacterArtes.addItem(arte);
 			}
-		});
+		}
 
 		this.firstCharacterPanel.add(this.firstCharacterLabel);
 		this.firstCharacterPanel.add(this.firstCharacters);
@@ -87,22 +105,30 @@ public class MainFrame extends JFrame {
 		this.secondCharacterLabel = new JLabel("Personnage 2");
 
 		this.secondCharacters = new JComboBox<Character>(this.characters.toArray(new Character[0]));
-		this.secondCharacters.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO
-			}
-		});
+		this.secondCharacters.setRenderer(new NameListCellRenderer());
+		// this.secondCharacters.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// // TODO
+		// }
+		// });
 
 		this.secondCharacterArteLabel = new JLabel("Tech personnage 2");
 
-		this.secondCharacterArtes = new JComboBox<Arte>(this.artes.toArray(new Arte[0]));
-		this.secondCharacterArtes.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO
+		this.secondCharacterArtes = new JComboBox<Arte>();
+		this.secondCharacterArtes.setRenderer(new NameListCellRenderer());
+		// this.secondCharacterArtes.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// // TODO
+		// }
+		// });
+
+		for (Arte arte : artes) {
+			if (!arte.isCompound()) {
+				this.secondCharacterArtes.addItem(arte);
 			}
-		});
+		}
 
 		this.secondCharacterPanel.add(this.secondCharacterLabel);
 		this.secondCharacterPanel.add(this.secondCharacters);
@@ -115,12 +141,14 @@ public class MainFrame extends JFrame {
 		this.compoundArteLabel = new JLabel("Attaque Unisson");
 
 		this.compoundArtes = new JComboBox<Arte>();
-		this.compoundArtes.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO
-			}
-		});
+		this.compoundArtes.setRenderer(new NameListCellRenderer());
+		// this.compoundArtes.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// // TODO
+		// }
+		// });
+
 		for (Arte arte : artes) {
 			if (arte.isCompound()) {
 				this.compoundArtes.addItem(arte);
