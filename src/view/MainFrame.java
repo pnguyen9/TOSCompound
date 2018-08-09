@@ -67,6 +67,7 @@ public class MainFrame extends JFrame {
 		this.firstCharacterPanel.setLayout(new BoxLayout(this.firstCharacterPanel, BoxLayout.Y_AXIS));
 
 		this.firstCharacterLabel = new JLabel("Personnage 1");
+		this.firstCharacterLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.firstCharacters = new JComboBox<Character>(this.characters.toArray(new Character[0]));
 		this.firstCharacters.setRenderer(new NameListCellRenderer());
@@ -78,6 +79,7 @@ public class MainFrame extends JFrame {
 		// });
 
 		this.firstCharacterArteLabel = new JLabel("Tech personnage 1");
+		this.firstCharacterArteLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.firstCharacterArtes = new JComboBox<Arte>();
 		this.firstCharacterArtes.setRenderer(new NameListCellRenderer());
@@ -103,6 +105,7 @@ public class MainFrame extends JFrame {
 		this.secondCharacterPanel.setLayout(new BoxLayout(this.secondCharacterPanel, BoxLayout.Y_AXIS));
 
 		this.secondCharacterLabel = new JLabel("Personnage 2");
+		this.secondCharacterLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.secondCharacters = new JComboBox<Character>(this.characters.toArray(new Character[0]));
 		this.secondCharacters.setRenderer(new NameListCellRenderer());
@@ -114,6 +117,7 @@ public class MainFrame extends JFrame {
 		// });
 
 		this.secondCharacterArteLabel = new JLabel("Tech personnage 2");
+		this.secondCharacterArteLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.secondCharacterArtes = new JComboBox<Arte>();
 		this.secondCharacterArtes.setRenderer(new NameListCellRenderer());
@@ -139,6 +143,7 @@ public class MainFrame extends JFrame {
 		this.compoundArtePanel.setLayout(new BoxLayout(this.compoundArtePanel, BoxLayout.Y_AXIS));
 
 		this.compoundArteLabel = new JLabel("Attaque Unisson");
+		this.compoundArteLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.compoundArtes = new JComboBox<Arte>();
 		this.compoundArtes.setRenderer(new NameListCellRenderer());
