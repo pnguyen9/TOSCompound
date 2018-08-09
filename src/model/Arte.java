@@ -3,7 +3,14 @@ package model;
 public class Arte {
 
 	private String name;
-	private int level;
-	private String description;
-	
+	private boolean isCompound;
+
+	public String getName() {
+		return name;
+	}
+
+	public boolean isCompound() {
+		return isCompound;
+	}
+
 }
