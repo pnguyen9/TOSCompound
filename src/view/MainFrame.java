@@ -167,17 +167,17 @@ public class MainFrame extends JFrame {
 
 		this.compoundArtes = new JComboBox<Arte>();
 		this.compoundArtes.setRenderer(new NameListCellRenderer());
-		this.compoundArtes.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!changeListenerIsDisabled) {
-					loadFirstCharacterList();
-					loadFirstCharacterArtesList();
-					loadSecondCharacterList();
-					loadSecondCharacterArtesList();
-				}
-			}
-		});
+		// this.compoundArtes.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// if (!changeListenerIsDisabled) {
+		// loadFirstCharacterList();
+		// loadFirstCharacterArtesList();
+		// loadSecondCharacterList();
+		// loadSecondCharacterArtesList();
+		// }
+		// }
+		// });
 
 		this.compoundArtePanel.add(this.compoundArteLabel);
 		this.compoundArtePanel.add(this.compoundArtes);
@@ -240,13 +240,18 @@ public class MainFrame extends JFrame {
 	private void loadFirstCharacterArtesList() {
 		this.changeListenerIsDisabled = true;
 
-		this.firstCharacterArtes.removeAllItems();
-
 		Character selectedFirstCharacter = null;
+		Arte selectedFirstCharacterArte = null;
 
 		if (this.firstCharacters.getSelectedItem() != null) {
 			selectedFirstCharacter = (Character) this.firstCharacters.getSelectedItem();
 		}
+
+		if (this.firstCharacterArtes.getSelectedItem() != null) {
+			selectedFirstCharacterArte = (Arte) this.firstCharacterArtes.getSelectedItem();
+		}
+
+		this.firstCharacterArtes.removeAllItems();
 
 		for (Arte arte : artes) {
 			if (arte.getId() == 0 && !arte.isCompound()) {
@@ -262,6 +267,10 @@ public class MainFrame extends JFrame {
 					this.firstCharacterArtes.addItem(arte);
 				}
 			}
+		}
+
+		if (selectedFirstCharacterArte != null) {
+			this.firstCharacterArtes.setSelectedItem(selectedFirstCharacterArte);
 		}
 
 		this.changeListenerIsDisabled = false;
@@ -304,13 +313,18 @@ public class MainFrame extends JFrame {
 	private void loadSecondCharacterArtesList() {
 		this.changeListenerIsDisabled = true;
 
-		this.secondCharacterArtes.removeAllItems();
-
 		Character selectedSecondCharacter = null;
+		Arte selectedSecondCharacterArte = null;
 
 		if (this.secondCharacters.getSelectedItem() != null) {
 			selectedSecondCharacter = (Character) this.secondCharacters.getSelectedItem();
 		}
+
+		if (this.secondCharacterArtes.getSelectedItem() != null) {
+			selectedSecondCharacterArte = (Arte) this.secondCharacterArtes.getSelectedItem();
+		}
+
+		this.secondCharacterArtes.removeAllItems();
 
 		for (Arte arte : artes) {
 			if (arte.getId() == 0 && !arte.isCompound()) {
@@ -328,6 +342,10 @@ public class MainFrame extends JFrame {
 			}
 		}
 
+		if (selectedSecondCharacterArte != null) {
+			this.secondCharacterArtes.setSelectedItem(selectedSecondCharacterArte);
+		}
+
 		this.changeListenerIsDisabled = false;
 	}
 
@@ -336,14 +354,13 @@ public class MainFrame extends JFrame {
 
 		this.compoundArtes.removeAllItems();
 
-		for (Arte arte : artes) {
-			if (arte.getId() == 0 && arte.isCompound()) {
-				this.compoundArtes.addItem(arte);
-				continue;
-			}
+		Arte selectedFirstCharacterArte = (Arte) this.firstCharacterArtes.getSelectedItem();
+		Arte selectedSecondCharacterArte = (Arte) this.secondCharacterArtes.getSelectedItem();
 
-			if (arte.isCompound()) {
-				this.compoundArtes.addItem(arte);
+		for (Compound compound : compounds) {
+			if ((compound.getFirstArte().equals(selectedFirstCharacterArte)
+					&& compound.getSecondArte().equals(selectedSecondCharacterArte))) {
+				this.compoundArtes.addItem(compound.getCompoundArte());
 			}
 		}
 
