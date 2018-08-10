@@ -36,7 +36,8 @@ public class TOSCompoundDB {
 
 		try {
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM ARTE");
+			String query = "SELECT * FROM ARTE";
+			ResultSet resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
@@ -57,7 +58,8 @@ public class TOSCompoundDB {
 
 		try {
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM CHARACTER");
+			String query = "SELECT * FROM CHARACTER";
+			ResultSet resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
@@ -72,35 +74,29 @@ public class TOSCompoundDB {
 		return characters;
 	}
 
-	// Maybe an ORM wouldn't have been a bad idea after all...
-
-	public List<CharacterArte> getCharacterArtes(List<Arte> artes, List<Character> characters) {
+	public List<CharacterArte> getCharacterArtes() {
 		List<CharacterArte> characterArtes = new ArrayList<CharacterArte>();
 
 		try {
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM CHARACTER_ARTE");
+			String query = //
+					"SELECT c.id AS c_id, c.name AS c_name, " + //
+							"a.id AS a_id, a.name AS a_name, a.is_compound AS a_is_compound " + //
+							"FROM Character_Arte ca " + //
+							"JOIN Character c ON ca.character_id = c.id " + //
+							"JOIN Arte a ON ca.arte_id = a.id;"; //
+			ResultSet resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
-				int characterId = resultSet.getInt("character_id");
-				int arteId = resultSet.getInt("arte_id");
+				int characterId = resultSet.getInt("c_id");
+				String characterName = resultSet.getString("c_name");
 
-				Character character = null;
-				Arte arte = null;
+				int arteId = resultSet.getInt("a_id");
+				String arteName = resultSet.getString("a_name");
+				boolean isCompound = resultSet.getInt("a_is_compound") == 1 ? true : false;
 
-				for (Character tempChar : characters) {
-					if (tempChar.getId() == characterId) {
-						character = tempChar;
-						break;
-					}
-				}
-
-				for (Arte tempArte : artes) {
-					if (tempArte.getId() == arteId) {
-						arte = tempArte;
-						break;
-					}
-				}
+				Character character = new Character(characterId, characterName);
+				Arte arte = new Arte(arteId, arteName, isCompound);
 
 				characterArtes.add(new CharacterArte(character, arte));
 			}
@@ -111,43 +107,39 @@ public class TOSCompoundDB {
 		return characterArtes;
 	}
 
-	public List<Compound> getCompounds(List<Arte> artes) {
+	public List<Compound> getCompounds() {
 		List<Compound> compounds = new ArrayList<Compound>();
 
 		try {
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM COMPOUND");
+			String query = //
+					"SELECT c.id AS id, a1.id AS a1_id, a1.name AS a1_name, a1.is_compound AS a1_is_compound, " + //
+							"a2.id AS a2_id, a2.name AS a2_name, a2.is_compound AS a2_is_compound, " + //
+							"a3.id AS a3_id, a3.name AS a3_name, a3.is_compound AS a3_is_compound " + //
+							"FROM Compound c " + //
+							"JOIN Arte a1 ON c.first_arte_id = a1.id " + //
+							"JOIN Arte a2 ON c.second_arte_id = a2.id " + //
+							"JOIN Arte a3 ON C.compound_arte_id = a3.id;"; //
+			ResultSet resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
-				int firstArteId = resultSet.getInt("first_arte_id");
-				int secondArteId = resultSet.getInt("second_arte_id");
-				int compoundArteId = resultSet.getInt("compound_arte_id");
 
-				Arte firstArte = null;
-				Arte secondArte = null;
-				Arte compoundArte = null;
+				int firstArteId = resultSet.getInt("a1_id");
+				String firstArteName = resultSet.getString("a1_name");
+				boolean firstArteIsCompound = resultSet.getInt("a1_is_compound") == 1 ? true : false;
 
-				for (Arte arte : artes) {
-					if (arte.getId() == firstArteId) {
-						firstArte = arte;
-						break;
-					}
-				}
+				int secondArteId = resultSet.getInt("a2_id");
+				String secondArteName = resultSet.getString("a2_name");
+				boolean secondArteIsCompound = resultSet.getInt("a2_is_compound") == 1 ? true : false;
 
-				for (Arte arte : artes) {
-					if (arte.getId() == secondArteId) {
-						secondArte = arte;
-						break;
-					}
-				}
+				int compoundArteId = resultSet.getInt("a3_id");
+				String compoundArteName = resultSet.getString("a3_name");
+				boolean compoundArteIsCompound = resultSet.getInt("a3_is_compound") == 1 ? true : false;
 
-				for (Arte arte : artes) {
-					if (arte.getId() == compoundArteId) {
-						compoundArte = arte;
-						break;
-					}
-				}
+				Arte firstArte = new Arte(firstArteId, firstArteName, firstArteIsCompound);
+				Arte secondArte = new Arte(secondArteId, secondArteName, secondArteIsCompound);
+				Arte compoundArte = new Arte(compoundArteId, compoundArteName, compoundArteIsCompound);
 
 				compounds.add(new Compound(id, firstArte, secondArte, compoundArte));
 			}

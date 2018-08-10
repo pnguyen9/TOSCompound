@@ -16,8 +16,8 @@ public class TOSCompound {
 
 		List<Arte> artes = db.getArtes();
 		List<Character> characters = db.getCharacters();
-		List<CharacterArte> characterArtes = db.getCharacterArtes(artes, characters);
-		List<Compound> compounds = db.getCompounds(artes);
+		List<CharacterArte> characterArtes = db.getCharacterArtes();
+		List<Compound> compounds = db.getCompounds();
 
 		MainFrame mainFrame = new MainFrame(artes, characters, characterArtes, compounds);
 		mainFrame.initComponents();
