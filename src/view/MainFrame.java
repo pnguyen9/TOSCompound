@@ -64,11 +64,6 @@ public class MainFrame extends JFrame {
 		for (CharacterArte characterArte : characterArtes) {
 			this.characterArtes.put(characterArte.getArte(), characterArte.getCharacter());
 		}
-		for (Arte arte : artes) {
-			if (this.characterArtes.containsKey(arte)) {
-				System.err.println("J'aime quand ça claque");
-			}
-		}
 
 		// For blank selection purpose
 		this.artes.add(0, BLANK_ARTE);
