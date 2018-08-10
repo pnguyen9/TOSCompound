@@ -30,4 +30,15 @@ public class Compound {
 		return compoundArte;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		boolean isEquals = false;
+
+		if (obj instanceof Compound) {
+			isEquals = this.id == ((Compound) obj).getId();
+		}
+
+		return isEquals;
+	}
+
 }

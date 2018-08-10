@@ -24,4 +24,15 @@ public class Arte {
 		return isCompound;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		boolean isEquals = false;
+
+		if (obj instanceof Arte) {
+			isEquals = this.id == ((Arte) obj).getId();
+		}
+
+		return isEquals;
+	}
+
 }

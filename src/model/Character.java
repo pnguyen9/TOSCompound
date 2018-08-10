@@ -18,4 +18,15 @@ public class Character {
 		return name;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		boolean isEquals = false;
+
+		if (obj instanceof Character) {
+			isEquals = this.id == ((Character) obj).getId();
+		}
+
+		return isEquals;
+	}
+
 }
