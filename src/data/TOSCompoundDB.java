@@ -117,9 +117,14 @@ public class TOSCompoundDB {
 							"a2.id AS a2_id, a2.name AS a2_name, a2.is_compound AS a2_is_compound, " + //
 							"a3.id AS a3_id, a3.name AS a3_name, a3.is_compound AS a3_is_compound " + //
 							"FROM Compound c " + //
-							"JOIN Arte a1 ON c.first_arte_id = a1.id " + //
-							"JOIN Arte a2 ON c.second_arte_id = a2.id " + //
-							"JOIN Arte a3 ON C.compound_arte_id = a3.id;"; //
+							"JOIN Compound_Component_Arte cca1 ON c.id = cca1.compound_id " + //
+							"JOIN Compound_Component_Arte cca2 ON c.id = cca2.compound_id " + //
+							"JOIN Arte a1 ON cca1.arte_id = a1.id " + //
+							"JOIN Arte a2 ON cca2.arte_id = a2.id " + //
+							"JOIN Arte a3 ON C.compound_arte_id = a3.id " + //
+							"WHERE cca1.id < cca2.id " + //
+							"AND cca1.compound_id = cca2.compound_id " + //
+							"ORDER BY a3_id;"; //
 			ResultSet resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
@@ -137,11 +142,17 @@ public class TOSCompoundDB {
 				String compoundArteName = resultSet.getString("a3_name");
 				boolean compoundArteIsCompound = resultSet.getInt("a3_is_compound") == 1 ? true : false;
 
+				List<Arte> componentArtes = new ArrayList<Arte>();
+
 				Arte firstArte = new Arte(firstArteId, firstArteName, firstArteIsCompound);
 				Arte secondArte = new Arte(secondArteId, secondArteName, secondArteIsCompound);
+
+				componentArtes.add(firstArte);
+				componentArtes.add(secondArte);
+
 				Arte compoundArte = new Arte(compoundArteId, compoundArteName, compoundArteIsCompound);
 
-				compounds.add(new Compound(id, firstArte, secondArte, compoundArte));
+				compounds.add(new Compound(id, componentArtes, compoundArte));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

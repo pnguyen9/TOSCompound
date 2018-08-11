@@ -2,6 +2,7 @@ package view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,6 @@ public class MainFrame extends JFrame {
 
 		// For blank selection purpose
 		this.artes.add(0, BLANK_ARTE);
-		this.artes.add(0, BLANK_COMPOUND_ARTE);
 		this.characters.add(0, BLANK_CHARACTER);
 
 		this.changeListenerIsDisabled = false;
@@ -354,12 +354,17 @@ public class MainFrame extends JFrame {
 
 		this.compoundArtes.removeAllItems();
 
+		List<Arte> selectedArtes = new ArrayList<Arte>();
 		Arte selectedFirstCharacterArte = (Arte) this.firstCharacterArtes.getSelectedItem();
 		Arte selectedSecondCharacterArte = (Arte) this.secondCharacterArtes.getSelectedItem();
 
+		selectedArtes.add(selectedFirstCharacterArte);
+		selectedArtes.add(selectedSecondCharacterArte);
+
+		this.compoundArtes.addItem(BLANK_COMPOUND_ARTE);
+
 		for (Compound compound : compounds) {
-			if ((compound.getFirstArte().equals(selectedFirstCharacterArte)
-					&& compound.getSecondArte().equals(selectedSecondCharacterArte))) {
+			if (selectedArtes.containsAll(compound.getComponentArtes())) {
 				this.compoundArtes.addItem(compound.getCompoundArte());
 			}
 		}
