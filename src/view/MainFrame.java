@@ -67,10 +67,10 @@ public class MainFrame extends JFrame {
 
 			if (arteCharacters == null) {
 				arteCharacters = new ArrayList<Character>();
-				this.charactersForArte.put(characterArte.getArte(), arteCharacters);
 			}
 
 			arteCharacters.add(characterArte.getCharacter());
+			this.charactersForArte.put(characterArte.getArte(), arteCharacters);
 		}
 
 		// For blank selection purpose
@@ -111,9 +111,6 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
-					loadFirstCharacterList();
-					loadSecondCharacterList();
-					loadSecondCharacterArtesList();
 					loadCompoundsList();
 				}
 			}
@@ -153,9 +150,6 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
-					loadFirstCharacterList();
-					loadFirstCharacterArtesList();
-					loadSecondCharacterList();
 					loadCompoundsList();
 				}
 			}
@@ -363,16 +357,26 @@ public class MainFrame extends JFrame {
 
 		// TODO: Get compounds by characters, and show artes for a selected compound
 
-		List<Arte> selectedArtes = new ArrayList<Arte>();
 		Arte selectedFirstCharacterArte = (Arte) this.firstCharacterArtes.getSelectedItem();
 		Arte selectedSecondCharacterArte = (Arte) this.secondCharacterArtes.getSelectedItem();
 
-		selectedArtes.add(selectedFirstCharacterArte);
-		selectedArtes.add(selectedSecondCharacterArte);
+		if (!(selectedFirstCharacterArte.equals(BLANK_ARTE) || selectedSecondCharacterArte.equals(BLANK_ARTE))) {
+			List<Arte> selectedArtes = new ArrayList<Arte>();
 
-		for (Compound compound : compounds) {
-			if (selectedArtes.containsAll(compound.getComponentArtes())) {
-				this.compoundArtes.addItem(compound.getCompoundArte());
+			// Sorting in ascending order
+			if (selectedFirstCharacterArte.getId() > selectedSecondCharacterArte.getId()) {
+				selectedArtes.add(selectedSecondCharacterArte);
+				selectedArtes.add(selectedFirstCharacterArte);
+			} else {
+				selectedArtes.add(selectedFirstCharacterArte);
+				selectedArtes.add(selectedSecondCharacterArte);
+			}
+
+			for (Compound compound : compounds) {
+				// Since both arrays are sorted, the comparison works
+				if (selectedArtes.equals(compound.getComponentArtes())) {
+					this.compoundArtes.addItem(compound.getCompoundArte());
+				}
 			}
 		}
 

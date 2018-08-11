@@ -123,8 +123,7 @@ public class TOSCompoundDB {
 							"JOIN Arte a2 ON cca2.arte_id = a2.id " + //
 							"JOIN Arte a3 ON C.compound_arte_id = a3.id " + //
 							"WHERE cca1.id < cca2.id " + //
-							"AND cca1.compound_id = cca2.compound_id " + //
-							"ORDER BY a3_id;"; //
+							"AND cca1.compound_id = cca2.compound_id;"; //
 			ResultSet resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
@@ -147,8 +146,14 @@ public class TOSCompoundDB {
 				Arte firstArte = new Arte(firstArteId, firstArteName, firstArteIsCompound);
 				Arte secondArte = new Arte(secondArteId, secondArteName, secondArteIsCompound);
 
-				componentArtes.add(firstArte);
-				componentArtes.add(secondArte);
+				// Sorting in ascending order
+				if (firstArte.getId() > secondArte.getId()) {
+					componentArtes.add(secondArte);
+					componentArtes.add(firstArte);
+				} else {
+					componentArtes.add(firstArte);
+					componentArtes.add(secondArte);
+				}
 
 				Arte compoundArte = new Arte(compoundArteId, compoundArteName, compoundArteIsCompound);
 
