@@ -98,6 +98,7 @@ public class MainFrame extends JFrame {
 					loadSecondCharacterList();
 					loadSecondCharacterArtesList();
 					loadCompoundsList();
+					pack();
 				}
 			}
 		});
@@ -112,6 +113,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
 					loadCompoundsList();
+					pack();
 				}
 			}
 		});
@@ -137,6 +139,7 @@ public class MainFrame extends JFrame {
 					loadFirstCharacterArtesList();
 					loadSecondCharacterArtesList();
 					loadCompoundsList();
+					pack();
 				}
 			}
 		});
@@ -151,6 +154,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
 					loadCompoundsList();
+					pack();
 				}
 			}
 		});
@@ -176,6 +180,7 @@ public class MainFrame extends JFrame {
 		// loadFirstCharacterArtesList();
 		// loadSecondCharacterList();
 		// loadSecondCharacterArtesList();
+		// pack();
 		// }
 		// }
 		// });
@@ -380,7 +385,7 @@ public class MainFrame extends JFrame {
 			}
 		}
 
-		if (this.compoundArtes.getItemCount() < 1 || this.compoundArtes.getItemCount() > 1) {
+		if (this.compoundArtes.getItemCount() < 1) {
 			this.compoundArtes.addItem(BLANK_COMPOUND_ARTE);
 		}
 
