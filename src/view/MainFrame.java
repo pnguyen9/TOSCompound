@@ -172,18 +172,6 @@ public class MainFrame extends JFrame {
 
 		this.compoundArtes = new JComboBox<Arte>();
 		this.compoundArtes.setRenderer(new NameListCellRenderer());
-		// this.compoundArtes.addActionListener(new ActionListener() {
-		// @Override
-		// public void actionPerformed(ActionEvent e) {
-		// if (!changeListenerIsDisabled) {
-		// loadFirstCharacterList();
-		// loadFirstCharacterArtesList();
-		// loadSecondCharacterList();
-		// loadSecondCharacterArtesList();
-		// pack();
-		// }
-		// }
-		// });
 
 		this.compoundArtePanel.add(this.compoundArteLabel);
 		this.compoundArtePanel.add(this.compoundArtes);
