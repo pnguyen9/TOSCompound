@@ -55,4 +55,9 @@ public class Arte {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Arte [id=" + id + ", name=" + name + ", isCompound=" + isCompound + "]";
+	}
+
 }

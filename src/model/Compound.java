@@ -60,4 +60,9 @@ public class Compound {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Compound [id=" + id + ", componentArtes=" + componentArtes + ", compoundArte=" + compoundArte + "]";
+	}
+
 }

@@ -45,7 +45,7 @@ public class MainFrame extends JFrame {
 	private List<Character> characters;
 	private List<Compound> compounds;
 
-	private Map<Arte, Character> characterArtes;
+	private Map<Arte, List<Character>> charactersForArte;
 
 	// For blank selection purpose
 	private final static Arte BLANK_ARTE = new Arte(0, " ", false);
@@ -59,11 +59,18 @@ public class MainFrame extends JFrame {
 		super("Tales of Symphonia - Compound artes");
 		this.artes = artes;
 		this.characters = characters;
-		this.characterArtes = new HashMap<Arte, Character>();
+		this.charactersForArte = new HashMap<Arte, List<Character>>();
 		this.compounds = compounds;
 
 		for (CharacterArte characterArte : characterArtes) {
-			this.characterArtes.put(characterArte.getArte(), characterArte.getCharacter());
+			List<Character> arteCharacters = this.charactersForArte.get(characterArte.getArte());
+
+			if (arteCharacters == null) {
+				arteCharacters = new ArrayList<Character>();
+				this.charactersForArte.put(characterArte.getArte(), arteCharacters);
+			}
+
+			arteCharacters.add(characterArte.getCharacter());
 		}
 
 		// For blank selection purpose
@@ -259,10 +266,10 @@ public class MainFrame extends JFrame {
 				continue;
 			}
 
-			Character character = this.characterArtes.get(arte);
+			List<Character> arteCharacters = this.charactersForArte.get(arte);
 
 			if (selectedFirstCharacter.equals(BLANK_CHARACTER)
-					|| (character != null && character.equals(selectedFirstCharacter))) {
+					|| (arteCharacters != null && arteCharacters.contains(selectedFirstCharacter))) {
 				if (!arte.isCompound()) {
 					this.firstCharacterArtes.addItem(arte);
 				}
@@ -332,10 +339,10 @@ public class MainFrame extends JFrame {
 				continue;
 			}
 
-			Character character = this.characterArtes.get(arte);
+			List<Character> arteCharacters = this.charactersForArte.get(arte);
 
 			if (selectedSecondCharacter.equals(BLANK_CHARACTER)
-					|| (character != null && character.equals(selectedSecondCharacter))) {
+					|| (arteCharacters != null && arteCharacters.contains(selectedSecondCharacter))) {
 				if (!arte.isCompound()) {
 					this.secondCharacterArtes.addItem(arte);
 				}
@@ -354,6 +361,8 @@ public class MainFrame extends JFrame {
 
 		this.compoundArtes.removeAllItems();
 
+		// TODO: Get compounds by characters, and show artes for a selected compound
+
 		List<Arte> selectedArtes = new ArrayList<Arte>();
 		Arte selectedFirstCharacterArte = (Arte) this.firstCharacterArtes.getSelectedItem();
 		Arte selectedSecondCharacterArte = (Arte) this.secondCharacterArtes.getSelectedItem();
@@ -361,12 +370,14 @@ public class MainFrame extends JFrame {
 		selectedArtes.add(selectedFirstCharacterArte);
 		selectedArtes.add(selectedSecondCharacterArte);
 
-		this.compoundArtes.addItem(BLANK_COMPOUND_ARTE);
-
 		for (Compound compound : compounds) {
 			if (selectedArtes.containsAll(compound.getComponentArtes())) {
 				this.compoundArtes.addItem(compound.getCompoundArte());
 			}
+		}
+
+		if (this.compoundArtes.getItemCount() < 1 || this.compoundArtes.getItemCount() > 1) {
+			this.compoundArtes.addItem(BLANK_COMPOUND_ARTE);
 		}
 
 		this.changeListenerIsDisabled = false;

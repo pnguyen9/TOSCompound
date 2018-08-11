@@ -49,4 +49,9 @@ public class CharacterArte {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "CharacterArte [character=" + character + ", arte=" + arte + "]";
+	}
+
 }

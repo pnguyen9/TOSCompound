@@ -46,4 +46,9 @@ public class Character {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Character [id=" + id + ", name=" + name + "]";
+	}
+
 }
