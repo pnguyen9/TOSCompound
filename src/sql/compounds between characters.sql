@@ -10,6 +10,6 @@ JOIN Character_Arte ca2 ON ca2.arte_id = a2.id
 JOIN Character c1 ON ca1.character_id = c1.id 
 JOIN Character c2 ON ca2.character_id = c2.id 
 WHERE cca1.id < cca2.id 
-AND cca1.compound_id = cca2.compound_id
-AND c1.id != c2.id
+AND cca1.compound_id = cca2.compound_id 
+AND c1.id != c2.id 
 AND ((c1.name LIKE 'lloyd%' AND c2.name LIKE 'colette%') OR (c2.name LIKE 'lloyd%' AND c1.name LIKE 'colette%'));

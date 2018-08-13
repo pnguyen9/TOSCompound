@@ -13,6 +13,10 @@ public class TOSCompoundDB {
 
 	private Connection connection = null;
 
+	private static boolean isBlankString(String string) {
+		return string == null || string.trim().length() < 1;
+	}
+
 	public TOSCompoundDB() {
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -164,6 +168,86 @@ public class TOSCompoundDB {
 		}
 
 		return compounds;
+	}
+
+	public String[][] queryCompoundsForSelectedConditions(String selectedFirstCharacter,
+			String selectedSecondCharacter) {
+		String[][] queryResults;
+		List<String[]> results = new ArrayList<String[]>();
+
+		try {
+			Statement statement = connection.createStatement();
+			String query = //
+					"SELECT c1.name AS char_1, a1.name AS tech_1, " + //
+							"c2.name AS char_2, a2.name AS tech_2, a3.name AS compound " + //
+							"FROM Compound c " + //
+							"JOIN Compound_Component_Arte cca1 ON c.id = cca1.compound_id " + //
+							"JOIN Compound_Component_Arte cca2 ON c.id = cca2.compound_id " + //
+							"JOIN Arte a1 ON cca1.arte_id = a1.id " + //
+							"JOIN Arte a2 ON cca2.arte_id = a2.id " + //
+							"JOIN Arte a3 ON C.compound_arte_id = a3.id " + //
+							"JOIN Character_Arte ca1 ON ca1.arte_id = a1.id " + //
+							"JOIN Character_Arte ca2 ON ca2.arte_id = a2.id " + //
+							"JOIN Character c1 ON ca1.character_id = c1.id " + //
+							"JOIN Character c2 ON ca2.character_id = c2.id " + //
+							"WHERE cca1.id < cca2.id " + //
+							"AND cca1.compound_id = cca2.compound_id " + //
+							"AND c1.id != c2.id ";
+
+			String selectedFirstCharacterCondition = //
+					"AND ((c1.name LIKE '" + selectedFirstCharacter + "') " + //
+							"OR (c2.name LIKE '" + selectedFirstCharacter + "')) ";//
+
+			String selectedSecondCharacterCondition = //
+					"AND ((c2.name LIKE '" + selectedSecondCharacter + "') " + //
+							"OR (c1.name LIKE '" + selectedSecondCharacter + "')) ";//
+
+			String selectedCharactersCondition = //
+					"AND ((c1.name LIKE '" + selectedFirstCharacter + "' " + //
+							"AND c2.name LIKE '" + selectedSecondCharacter + "') " + //
+							"OR (c2.name LIKE '" + selectedFirstCharacter + "' " + //
+							"AND c1.name LIKE '" + selectedSecondCharacter + "'))"; //
+
+			if (!(isBlankString(selectedFirstCharacter) || isBlankString(selectedSecondCharacter))) {
+				query += selectedCharactersCondition;
+			} else if (!isBlankString(selectedFirstCharacter) && isBlankString(selectedSecondCharacter)) {
+				query += selectedFirstCharacterCondition;
+			} else if (isBlankString(selectedFirstCharacter) && !isBlankString(selectedSecondCharacter)) {
+				query += selectedSecondCharacterCondition;
+			}
+
+			query += ";";
+
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next()) {
+				String firstCharacterName = resultSet.getString("char_1");
+				String firstcharacterArteName = resultSet.getString("tech_1");
+				String secondCharacterName = resultSet.getString("char_2");
+				String secondcharacterArteName = resultSet.getString("tech_2");
+				String compoundName = resultSet.getString("compound");
+
+				String[] result = { //
+						firstCharacterName, //
+						firstcharacterArteName, //
+						secondCharacterName, //
+						secondcharacterArteName, //
+						compoundName //
+				};
+
+				results.add(result);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		queryResults = new String[results.size()][5];
+
+		for (int i = 0; i < results.size(); ++i) {
+			queryResults[i] = results.get(i);
+		}
+
+		return queryResults;
 	}
 
 	public Connection getConnection() {

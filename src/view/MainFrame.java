@@ -14,7 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
+import data.TOSCompoundDB;
 import model.Arte;
 import model.Character;
 import model.CharacterArte;
@@ -23,13 +25,15 @@ import model.Compound;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
+	private TOSCompoundDB db;
+
 	// For blank selection purpose
 	private final static Arte BLANK_ARTE = new Arte(0, " ", false);
 	private final static Arte BLANK_COMPOUND_ARTE = new Arte(0, " ", true);
 	private final static Character BLANK_CHARACTER = new Character(0, " ");
 
 	private static String[] RESULT_TABLE_COLUMNS = { //
-			"Tech Unisson", "Personnage 1", "Tech 1", "Personnage 2", "Tech 2" //
+			"Personnage 1", "Tech 1", "Personnage 2", "Tech 2", "Tech Unisson" //
 	}; //
 
 	private JPanel mainPanel;
@@ -56,6 +60,7 @@ public class MainFrame extends JFrame {
 	private JComboBox<Arte> compoundArtes;
 
 	private JTable resultTable;
+	private DefaultTableModel resultTableModel;
 	private JScrollPane resultTableScrollPane;
 
 	private List<Arte> artes;
@@ -74,9 +79,10 @@ public class MainFrame extends JFrame {
 
 	private boolean changeListenerIsDisabled;
 
-	public MainFrame(List<Arte> artes, List<Character> characters, List<CharacterArte> characterArtes,
+	public MainFrame(TOSCompoundDB db, List<Arte> artes, List<Character> characters, List<CharacterArte> characterArtes,
 			List<Compound> compounds) {
 		super("Tales of Symphonia - Compound artes");
+		this.db = db;
 		this.artes = artes;
 		this.characters = characters;
 		this.charactersForArte = new HashMap<Arte, List<Character>>();
@@ -106,7 +112,7 @@ public class MainFrame extends JFrame {
 		this.firstCharacterPanel = new JPanel();
 		this.firstCharacterPanel.setLayout(new BoxLayout(this.firstCharacterPanel, BoxLayout.Y_AXIS));
 
-		this.firstCharacterLabel = new JLabel(RESULT_TABLE_COLUMNS[1]);
+		this.firstCharacterLabel = new JLabel(RESULT_TABLE_COLUMNS[0]);
 		this.firstCharacterLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.firstCharacters = new JComboBox<Character>();
@@ -120,12 +126,15 @@ public class MainFrame extends JFrame {
 					loadFirstCharacterArtesList();
 					loadSecondCharacterList();
 					loadSecondCharacterArtesList();
+
+					updateResultTable();
+
 					pack();
 				}
 			}
 		});
 
-		this.firstCharacterArteLabel = new JLabel(RESULT_TABLE_COLUMNS[2]);
+		this.firstCharacterArteLabel = new JLabel(RESULT_TABLE_COLUMNS[1]);
 		this.firstCharacterArteLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.firstCharacterArtes = new JComboBox<Arte>();
@@ -148,7 +157,7 @@ public class MainFrame extends JFrame {
 		this.secondCharacterPanel = new JPanel();
 		this.secondCharacterPanel.setLayout(new BoxLayout(this.secondCharacterPanel, BoxLayout.Y_AXIS));
 
-		this.secondCharacterLabel = new JLabel(RESULT_TABLE_COLUMNS[3]);
+		this.secondCharacterLabel = new JLabel(RESULT_TABLE_COLUMNS[2]);
 		this.secondCharacterLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.secondCharacters = new JComboBox<Character>();
@@ -162,12 +171,15 @@ public class MainFrame extends JFrame {
 					loadFirstCharacterList();
 					loadFirstCharacterArtesList();
 					loadSecondCharacterArtesList();
+
+					updateResultTable();
+
 					pack();
 				}
 			}
 		});
 
-		this.secondCharacterArteLabel = new JLabel(RESULT_TABLE_COLUMNS[4]);
+		this.secondCharacterArteLabel = new JLabel(RESULT_TABLE_COLUMNS[3]);
 		this.secondCharacterArteLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.secondCharacterArtes = new JComboBox<Arte>();
@@ -212,9 +224,17 @@ public class MainFrame extends JFrame {
 		this.selectionPanel.add(this.compoundArtePanel);
 
 		this.resultPanel = new JPanel();
-		this.resultTable = new JTable(new String[2][5], RESULT_TABLE_COLUMNS);
+
+		this.resultTableModel = new DefaultTableModel(RESULT_TABLE_COLUMNS, 0);
+		this.resultTable = new JTable() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			};
+		};
+		this.resultTable.setModel(this.resultTableModel);
 		this.resultTableScrollPane = new JScrollPane(this.resultTable);
 		this.resultPanel.add(this.resultTableScrollPane);
+		this.updateResultTable();
 
 		this.mainPanel = new JPanel();
 		this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
@@ -381,6 +401,17 @@ public class MainFrame extends JFrame {
 		}
 
 		this.changeListenerIsDisabled = false;
+	}
+
+	private void updateResultTable() {
+		this.resultTableModel.setRowCount(0);
+
+		String[][] queryResults = db.queryCompoundsForSelectedConditions(this.selectedFirstCharacter.getName(),
+				this.selectedSecondCharacter.getName());
+
+		for (String[] row : queryResults) {
+			this.resultTableModel.addRow(row);
+		}
 	}
 
 }
