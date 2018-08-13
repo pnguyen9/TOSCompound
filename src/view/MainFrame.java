@@ -12,6 +12,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import model.Arte;
 import model.Character;
@@ -21,7 +23,19 @@ import model.Compound;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
+	// For blank selection purpose
+	private final static Arte BLANK_ARTE = new Arte(0, " ", false);
+	private final static Arte BLANK_COMPOUND_ARTE = new Arte(0, " ", true);
+	private final static Character BLANK_CHARACTER = new Character(0, " ");
+
+	private static String[] RESULT_TABLE_COLUMNS = { //
+			"Tech Unisson", "Personnage 1", "Tech 1", "Personnage 2", "Tech 2" //
+	}; //
+
 	private JPanel mainPanel;
+
+	private JPanel selectionPanel;
+	private JPanel resultPanel;
 
 	private JPanel firstCharacterPanel;
 	private JPanel secondCharacterPanel;
@@ -41,24 +55,22 @@ public class MainFrame extends JFrame {
 
 	private JComboBox<Arte> compoundArtes;
 
+	private JTable resultTable;
+	private JScrollPane resultTableScrollPane;
+
 	private List<Arte> artes;
 	private List<Character> characters;
 	private List<Compound> compounds;
 
 	private Map<Arte, List<Character>> charactersForArte;
 
-	private Character selectedFirstCharacter;
-	private Arte selectedFirstCharacterArte;
+	private Character selectedFirstCharacter = BLANK_CHARACTER;
+	private Arte selectedFirstCharacterArte = BLANK_ARTE;
 
-	private Character selectedSecondCharacter;
-	private Arte selectedSecondCharacterArte;
+	private Character selectedSecondCharacter = BLANK_CHARACTER;
+	private Arte selectedSecondCharacterArte = BLANK_ARTE;
 
-	private Arte selectedCompoundArte;
-
-	// For blank selection purpose
-	private final static Arte BLANK_ARTE = new Arte(0, " ", false);
-	private final static Arte BLANK_COMPOUND_ARTE = new Arte(0, " ", true);
-	private final static Character BLANK_CHARACTER = new Character(0, " ");
+	private Arte selectedCompoundArte = BLANK_COMPOUND_ARTE;
 
 	private boolean changeListenerIsDisabled;
 
@@ -83,6 +95,7 @@ public class MainFrame extends JFrame {
 
 		// For blank selection purpose
 		this.artes.add(0, BLANK_ARTE);
+		this.artes.add(0, BLANK_COMPOUND_ARTE);
 		this.characters.add(0, BLANK_CHARACTER);
 
 		this.changeListenerIsDisabled = false;
@@ -93,7 +106,7 @@ public class MainFrame extends JFrame {
 		this.firstCharacterPanel = new JPanel();
 		this.firstCharacterPanel.setLayout(new BoxLayout(this.firstCharacterPanel, BoxLayout.Y_AXIS));
 
-		this.firstCharacterLabel = new JLabel("Personnage 1");
+		this.firstCharacterLabel = new JLabel(RESULT_TABLE_COLUMNS[1]);
 		this.firstCharacterLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.firstCharacters = new JComboBox<Character>();
@@ -107,13 +120,12 @@ public class MainFrame extends JFrame {
 					loadFirstCharacterArtesList();
 					loadSecondCharacterList();
 					loadSecondCharacterArtesList();
-					loadCompoundsList();
 					pack();
 				}
 			}
 		});
 
-		this.firstCharacterArteLabel = new JLabel("Tech personnage 1");
+		this.firstCharacterArteLabel = new JLabel(RESULT_TABLE_COLUMNS[2]);
 		this.firstCharacterArteLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.firstCharacterArtes = new JComboBox<Arte>();
@@ -123,8 +135,6 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
 					selectedFirstCharacterArte = (Arte) firstCharacterArtes.getSelectedItem();
-
-					loadCompoundsList();
 					pack();
 				}
 			}
@@ -138,7 +148,7 @@ public class MainFrame extends JFrame {
 		this.secondCharacterPanel = new JPanel();
 		this.secondCharacterPanel.setLayout(new BoxLayout(this.secondCharacterPanel, BoxLayout.Y_AXIS));
 
-		this.secondCharacterLabel = new JLabel("Personnage 2");
+		this.secondCharacterLabel = new JLabel(RESULT_TABLE_COLUMNS[3]);
 		this.secondCharacterLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.secondCharacters = new JComboBox<Character>();
@@ -152,13 +162,12 @@ public class MainFrame extends JFrame {
 					loadFirstCharacterList();
 					loadFirstCharacterArtesList();
 					loadSecondCharacterArtesList();
-					loadCompoundsList();
 					pack();
 				}
 			}
 		});
 
-		this.secondCharacterArteLabel = new JLabel("Tech personnage 2");
+		this.secondCharacterArteLabel = new JLabel(RESULT_TABLE_COLUMNS[4]);
 		this.secondCharacterArteLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		this.secondCharacterArtes = new JComboBox<Arte>();
@@ -168,8 +177,6 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
 					selectedSecondCharacterArte = (Arte) secondCharacterArtes.getSelectedItem();
-
-					loadCompoundsList();
 					pack();
 				}
 			}
@@ -198,11 +205,22 @@ public class MainFrame extends JFrame {
 		this.compoundArtePanel.add(this.compoundArteLabel);
 		this.compoundArtePanel.add(this.compoundArtes);
 
-		this.mainPanel = new JPanel();
+		this.selectionPanel = new JPanel();
 
-		this.mainPanel.add(this.firstCharacterPanel);
-		this.mainPanel.add(this.secondCharacterPanel);
-		this.mainPanel.add(this.compoundArtePanel);
+		this.selectionPanel.add(this.firstCharacterPanel);
+		this.selectionPanel.add(this.secondCharacterPanel);
+		this.selectionPanel.add(this.compoundArtePanel);
+
+		this.resultPanel = new JPanel();
+		this.resultTable = new JTable(new String[2][5], RESULT_TABLE_COLUMNS);
+		this.resultTableScrollPane = new JScrollPane(this.resultTable);
+		this.resultPanel.add(this.resultTableScrollPane);
+
+		this.mainPanel = new JPanel();
+		this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
+
+		this.mainPanel.add(selectionPanel);
+		this.mainPanel.add(resultPanel);
 
 		this.add(this.mainPanel);
 
@@ -356,32 +374,10 @@ public class MainFrame extends JFrame {
 	private void loadCompoundsList() {
 		this.changeListenerIsDisabled = true;
 
-		this.compoundArtes.removeAllItems();
-
-		// TODO: Get compounds by characters, and show artes for a selected compound
-
-		if (!(this.selectedFirstCharacterArte.equals(BLANK_ARTE) || this.selectedSecondCharacterArte.equals(BLANK_ARTE))) {
-			List<Arte> selectedArtes = new ArrayList<Arte>();
-
-			// Sorting in ascending order
-			if (this.selectedFirstCharacterArte.getId() > this.selectedSecondCharacterArte.getId()) {
-				selectedArtes.add(this.selectedSecondCharacterArte);
-				selectedArtes.add(this.selectedFirstCharacterArte);
-			} else {
-				selectedArtes.add(this.selectedFirstCharacterArte);
-				selectedArtes.add(this.selectedSecondCharacterArte);
+		for (Arte arte : artes) {
+			if (arte.isCompound()) {
+				this.compoundArtes.addItem(arte);
 			}
-
-			for (Compound compound : compounds) {
-				// Since both arrays are sorted, the comparison works
-				if (selectedArtes.equals(compound.getComponentArtes())) {
-					this.compoundArtes.addItem(compound.getCompoundArte());
-				}
-			}
-		}
-
-		if (this.compoundArtes.getItemCount() < 1) {
-			this.compoundArtes.addItem(BLANK_COMPOUND_ARTE);
 		}
 
 		this.changeListenerIsDisabled = false;
