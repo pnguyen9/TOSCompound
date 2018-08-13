@@ -170,8 +170,8 @@ public class TOSCompoundDB {
 		return compounds;
 	}
 
-	public String[][] queryCompoundsForSelectedConditions(String selectedFirstCharacter,
-			String selectedSecondCharacter) {
+	public String[][] queryCompoundsForSelectedConditions(String selectedFirstCharacter, String selectedSecondCharacter,
+			String selectedFirstCharacterArte, String selectedSecondCharacterArte, String selectedCompoundArte) {
 		String[][] queryResults;
 		List<String[]> results = new ArrayList<String[]>();
 
@@ -206,7 +206,24 @@ public class TOSCompoundDB {
 					"AND ((c1.name LIKE '" + selectedFirstCharacter + "' " + //
 							"AND c2.name LIKE '" + selectedSecondCharacter + "') " + //
 							"OR (c2.name LIKE '" + selectedFirstCharacter + "' " + //
-							"AND c1.name LIKE '" + selectedSecondCharacter + "'))"; //
+							"AND c1.name LIKE '" + selectedSecondCharacter + "')) "; //
+
+			String selectedFirstCharacterArteCondition = //
+					"AND ((a1.name LIKE '" + selectedFirstCharacterArte + "') " + //
+							"OR (a2.name LIKE '" + selectedFirstCharacterArte + "')) ";//
+
+			String selectedSecondCharacterArteCondition = //
+					"AND ((a2.name LIKE '" + selectedSecondCharacterArte + "') " + //
+							"OR (a1.name LIKE '" + selectedSecondCharacterArte + "')) ";//
+
+			String selectedArtesCondition = //
+					"AND ((a1.name LIKE '" + selectedFirstCharacterArte + "' " + //
+							"AND a2.name LIKE '" + selectedSecondCharacterArte + "') " + //
+							"OR (a2.name LIKE '" + selectedFirstCharacterArte + "' " + //
+							"AND a1.name LIKE '" + selectedSecondCharacterArte + "')) "; //
+
+			String selectedCompoundArteCondition = //
+					"AND a3.name LIKE '" + selectedCompoundArte + "' ";
 
 			if (!(isBlankString(selectedFirstCharacter) || isBlankString(selectedSecondCharacter))) {
 				query += selectedCharactersCondition;
@@ -214,6 +231,18 @@ public class TOSCompoundDB {
 				query += selectedFirstCharacterCondition;
 			} else if (isBlankString(selectedFirstCharacter) && !isBlankString(selectedSecondCharacter)) {
 				query += selectedSecondCharacterCondition;
+			}
+
+			if (!(isBlankString(selectedFirstCharacterArte) || isBlankString(selectedSecondCharacterArte))) {
+				query += selectedArtesCondition;
+			} else if (!isBlankString(selectedFirstCharacterArte) && isBlankString(selectedSecondCharacterArte)) {
+				query += selectedFirstCharacterArteCondition;
+			} else if (isBlankString(selectedFirstCharacterArte) && !isBlankString(selectedSecondCharacterArte)) {
+				query += selectedSecondCharacterArteCondition;
+			}
+
+			if (!isBlankString(selectedCompoundArte)) {
+				query += selectedCompoundArteCondition;
 			}
 
 			query += ";";

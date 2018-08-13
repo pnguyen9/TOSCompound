@@ -144,6 +144,9 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
 					selectedFirstCharacterArte = (Arte) firstCharacterArtes.getSelectedItem();
+
+					updateResultTable();
+
 					pack();
 				}
 			}
@@ -189,6 +192,9 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
 					selectedSecondCharacterArte = (Arte) secondCharacterArtes.getSelectedItem();
+
+					updateResultTable();
+
 					pack();
 				}
 			}
@@ -211,6 +217,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectedCompoundArte = (Arte) compoundArtes.getSelectedItem();
+
+				updateResultTable();
 			}
 		});
 
@@ -406,8 +414,13 @@ public class MainFrame extends JFrame {
 	private void updateResultTable() {
 		this.resultTableModel.setRowCount(0);
 
-		String[][] queryResults = db.queryCompoundsForSelectedConditions(this.selectedFirstCharacter.getName(),
-				this.selectedSecondCharacter.getName());
+		String[][] queryResults = db.queryCompoundsForSelectedConditions( //
+				this.selectedFirstCharacter.getName(), //
+				this.selectedSecondCharacter.getName(), //
+				this.selectedFirstCharacterArte.getName(), //
+				this.selectedSecondCharacterArte.getName(), //
+				this.selectedCompoundArte.getName() //
+		);
 
 		for (String[] row : queryResults) {
 			this.resultTableModel.addRow(row);
