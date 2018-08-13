@@ -47,6 +47,14 @@ public class MainFrame extends JFrame {
 
 	private Map<Arte, List<Character>> charactersForArte;
 
+	private Character selectedFirstCharacter;
+	private Arte selectedFirstCharacterArte;
+
+	private Character selectedSecondCharacter;
+	private Arte selectedSecondCharacterArte;
+
+	private Arte selectedCompoundArte;
+
 	// For blank selection purpose
 	private final static Arte BLANK_ARTE = new Arte(0, " ", false);
 	private final static Arte BLANK_COMPOUND_ARTE = new Arte(0, " ", true);
@@ -94,6 +102,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
+					selectedFirstCharacter = (Character) firstCharacters.getSelectedItem();
+
 					loadFirstCharacterArtesList();
 					loadSecondCharacterList();
 					loadSecondCharacterArtesList();
@@ -112,6 +122,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
+					selectedFirstCharacterArte = (Arte) firstCharacterArtes.getSelectedItem();
+
 					loadCompoundsList();
 					pack();
 				}
@@ -135,6 +147,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
+					selectedSecondCharacter = (Character) secondCharacters.getSelectedItem();
+
 					loadFirstCharacterList();
 					loadFirstCharacterArtesList();
 					loadSecondCharacterArtesList();
@@ -153,6 +167,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!changeListenerIsDisabled) {
+					selectedSecondCharacterArte = (Arte) secondCharacterArtes.getSelectedItem();
+
 					loadCompoundsList();
 					pack();
 				}
@@ -172,6 +188,12 @@ public class MainFrame extends JFrame {
 
 		this.compoundArtes = new JComboBox<Arte>();
 		this.compoundArtes.setRenderer(new NameListCellRenderer());
+		this.compoundArtes.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectedCompoundArte = (Arte) compoundArtes.getSelectedItem();
+			}
+		});
 
 		this.compoundArtePanel.add(this.compoundArteLabel);
 		this.compoundArtePanel.add(this.compoundArtes);
@@ -200,15 +222,12 @@ public class MainFrame extends JFrame {
 	private void loadFirstCharacterList() {
 		this.changeListenerIsDisabled = true;
 
-		Character selectedFirstCharacter = null;
-		Character selectedSecondCharacter = null;
-
 		if (this.firstCharacters.getSelectedItem() != null) {
-			selectedFirstCharacter = (Character) this.firstCharacters.getSelectedItem();
+			this.selectedFirstCharacter = (Character) this.firstCharacters.getSelectedItem();
 		}
 
 		if (this.secondCharacters.getSelectedItem() != null) {
-			selectedSecondCharacter = (Character) this.secondCharacters.getSelectedItem();
+			this.selectedSecondCharacter = (Character) this.secondCharacters.getSelectedItem();
 		}
 
 		this.firstCharacters.removeAllItems();
@@ -219,13 +238,13 @@ public class MainFrame extends JFrame {
 				continue;
 			}
 
-			if (character != selectedSecondCharacter) {
+			if (character != this.selectedSecondCharacter) {
 				this.firstCharacters.addItem(character);
 			}
 		}
 
-		if (selectedFirstCharacter != null) {
-			this.firstCharacters.setSelectedItem(selectedFirstCharacter);
+		if (this.selectedFirstCharacter != null) {
+			this.firstCharacters.setSelectedItem(this.selectedFirstCharacter);
 		}
 
 		this.changeListenerIsDisabled = false;
@@ -234,15 +253,12 @@ public class MainFrame extends JFrame {
 	private void loadFirstCharacterArtesList() {
 		this.changeListenerIsDisabled = true;
 
-		Character selectedFirstCharacter = null;
-		Arte selectedFirstCharacterArte = null;
-
 		if (this.firstCharacters.getSelectedItem() != null) {
-			selectedFirstCharacter = (Character) this.firstCharacters.getSelectedItem();
+			this.selectedFirstCharacter = (Character) this.firstCharacters.getSelectedItem();
 		}
 
 		if (this.firstCharacterArtes.getSelectedItem() != null) {
-			selectedFirstCharacterArte = (Arte) this.firstCharacterArtes.getSelectedItem();
+			this.selectedFirstCharacterArte = (Arte) this.firstCharacterArtes.getSelectedItem();
 		}
 
 		this.firstCharacterArtes.removeAllItems();
@@ -255,16 +271,16 @@ public class MainFrame extends JFrame {
 
 			List<Character> arteCharacters = this.charactersForArte.get(arte);
 
-			if (selectedFirstCharacter.equals(BLANK_CHARACTER)
-					|| (arteCharacters != null && arteCharacters.contains(selectedFirstCharacter))) {
+			if (this.selectedFirstCharacter.equals(BLANK_CHARACTER)
+					|| (arteCharacters != null && arteCharacters.contains(this.selectedFirstCharacter))) {
 				if (!arte.isCompound()) {
 					this.firstCharacterArtes.addItem(arte);
 				}
 			}
 		}
 
-		if (selectedFirstCharacterArte != null) {
-			this.firstCharacterArtes.setSelectedItem(selectedFirstCharacterArte);
+		if (this.selectedFirstCharacterArte != null) {
+			this.firstCharacterArtes.setSelectedItem(this.selectedFirstCharacterArte);
 		}
 
 		this.changeListenerIsDisabled = false;
@@ -273,15 +289,12 @@ public class MainFrame extends JFrame {
 	private void loadSecondCharacterList() {
 		this.changeListenerIsDisabled = true;
 
-		Character selectedFirstCharacter = null;
-		Character selectedSecondCharacter = null;
-
 		if (this.firstCharacters.getSelectedItem() != null) {
-			selectedFirstCharacter = (Character) this.firstCharacters.getSelectedItem();
+			this.selectedFirstCharacter = (Character) this.firstCharacters.getSelectedItem();
 		}
 
 		if (this.secondCharacters.getSelectedItem() != null) {
-			selectedSecondCharacter = (Character) this.secondCharacters.getSelectedItem();
+			this.selectedSecondCharacter = (Character) this.secondCharacters.getSelectedItem();
 		}
 
 		this.secondCharacters.removeAllItems();
@@ -292,13 +305,13 @@ public class MainFrame extends JFrame {
 				continue;
 			}
 
-			if (character != selectedFirstCharacter) {
+			if (character != this.selectedFirstCharacter) {
 				this.secondCharacters.addItem(character);
 			}
 		}
 
-		if (selectedSecondCharacter != null) {
-			this.secondCharacters.setSelectedItem(selectedSecondCharacter);
+		if (this.selectedSecondCharacter != null) {
+			this.secondCharacters.setSelectedItem(this.selectedSecondCharacter);
 		}
 
 		this.changeListenerIsDisabled = false;
@@ -307,15 +320,12 @@ public class MainFrame extends JFrame {
 	private void loadSecondCharacterArtesList() {
 		this.changeListenerIsDisabled = true;
 
-		Character selectedSecondCharacter = null;
-		Arte selectedSecondCharacterArte = null;
-
 		if (this.secondCharacters.getSelectedItem() != null) {
-			selectedSecondCharacter = (Character) this.secondCharacters.getSelectedItem();
+			this.selectedSecondCharacter = (Character) this.secondCharacters.getSelectedItem();
 		}
 
 		if (this.secondCharacterArtes.getSelectedItem() != null) {
-			selectedSecondCharacterArte = (Arte) this.secondCharacterArtes.getSelectedItem();
+			this.selectedSecondCharacterArte = (Arte) this.secondCharacterArtes.getSelectedItem();
 		}
 
 		this.secondCharacterArtes.removeAllItems();
@@ -328,16 +338,16 @@ public class MainFrame extends JFrame {
 
 			List<Character> arteCharacters = this.charactersForArte.get(arte);
 
-			if (selectedSecondCharacter.equals(BLANK_CHARACTER)
-					|| (arteCharacters != null && arteCharacters.contains(selectedSecondCharacter))) {
+			if (this.selectedSecondCharacter.equals(BLANK_CHARACTER)
+					|| (arteCharacters != null && arteCharacters.contains(this.selectedSecondCharacter))) {
 				if (!arte.isCompound()) {
 					this.secondCharacterArtes.addItem(arte);
 				}
 			}
 		}
 
-		if (selectedSecondCharacterArte != null) {
-			this.secondCharacterArtes.setSelectedItem(selectedSecondCharacterArte);
+		if (this.selectedSecondCharacterArte != null) {
+			this.secondCharacterArtes.setSelectedItem(this.selectedSecondCharacterArte);
 		}
 
 		this.changeListenerIsDisabled = false;
@@ -350,19 +360,16 @@ public class MainFrame extends JFrame {
 
 		// TODO: Get compounds by characters, and show artes for a selected compound
 
-		Arte selectedFirstCharacterArte = (Arte) this.firstCharacterArtes.getSelectedItem();
-		Arte selectedSecondCharacterArte = (Arte) this.secondCharacterArtes.getSelectedItem();
-
-		if (!(selectedFirstCharacterArte.equals(BLANK_ARTE) || selectedSecondCharacterArte.equals(BLANK_ARTE))) {
+		if (!(this.selectedFirstCharacterArte.equals(BLANK_ARTE) || this.selectedSecondCharacterArte.equals(BLANK_ARTE))) {
 			List<Arte> selectedArtes = new ArrayList<Arte>();
 
 			// Sorting in ascending order
-			if (selectedFirstCharacterArte.getId() > selectedSecondCharacterArte.getId()) {
-				selectedArtes.add(selectedSecondCharacterArte);
-				selectedArtes.add(selectedFirstCharacterArte);
+			if (this.selectedFirstCharacterArte.getId() > this.selectedSecondCharacterArte.getId()) {
+				selectedArtes.add(this.selectedSecondCharacterArte);
+				selectedArtes.add(this.selectedFirstCharacterArte);
 			} else {
-				selectedArtes.add(selectedFirstCharacterArte);
-				selectedArtes.add(selectedSecondCharacterArte);
+				selectedArtes.add(this.selectedFirstCharacterArte);
+				selectedArtes.add(this.selectedSecondCharacterArte);
 			}
 
 			for (Compound compound : compounds) {
