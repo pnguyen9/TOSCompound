@@ -6,7 +6,6 @@ import data.TOSCompoundDB;
 import model.Arte;
 import model.Character;
 import model.CharacterArte;
-import model.Compound;
 import view.MainFrame;
 
 public class TOSCompound {
@@ -17,9 +16,8 @@ public class TOSCompound {
 		List<Arte> artes = db.getArtes();
 		List<Character> characters = db.getCharacters();
 		List<CharacterArte> characterArtes = db.getCharacterArtes();
-		List<Compound> compounds = db.getCompounds();
 
-		MainFrame mainFrame = new MainFrame(db, artes, characters, characterArtes, compounds);
+		MainFrame mainFrame = new MainFrame(db, artes, characters, characterArtes);
 		mainFrame.initComponents();
 	}
 

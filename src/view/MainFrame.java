@@ -20,7 +20,6 @@ import data.TOSCompoundDB;
 import model.Arte;
 import model.Character;
 import model.CharacterArte;
-import model.Compound;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
@@ -65,7 +64,6 @@ public class MainFrame extends JFrame {
 
 	private List<Arte> artes;
 	private List<Character> characters;
-	private List<Compound> compounds;
 
 	private Map<Arte, List<Character>> charactersForArte;
 
@@ -79,14 +77,13 @@ public class MainFrame extends JFrame {
 
 	private boolean changeListenerIsDisabled;
 
-	public MainFrame(TOSCompoundDB db, List<Arte> artes, List<Character> characters, List<CharacterArte> characterArtes,
-			List<Compound> compounds) {
+	public MainFrame(TOSCompoundDB db, List<Arte> artes, List<Character> characters,
+			List<CharacterArte> characterArtes) {
 		super("Tales of Symphonia - Compound artes");
 		this.db = db;
 		this.artes = artes;
 		this.characters = characters;
 		this.charactersForArte = new HashMap<Arte, List<Character>>();
-		this.compounds = compounds;
 
 		for (CharacterArte characterArte : characterArtes) {
 			List<Character> arteCharacters = this.charactersForArte.get(characterArte.getArte());
