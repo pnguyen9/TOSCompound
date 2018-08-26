@@ -125,8 +125,6 @@ public class MainFrame extends JFrame {
 					loadSecondCharacterArtesList();
 
 					updateResultTable();
-
-					pack();
 				}
 			}
 		});
@@ -143,8 +141,6 @@ public class MainFrame extends JFrame {
 					selectedFirstCharacterArte = (Arte) firstCharacterArtes.getSelectedItem();
 
 					updateResultTable();
-
-					pack();
 				}
 			}
 		});
@@ -173,8 +169,6 @@ public class MainFrame extends JFrame {
 					loadSecondCharacterArtesList();
 
 					updateResultTable();
-
-					pack();
 				}
 			}
 		});
@@ -191,8 +185,6 @@ public class MainFrame extends JFrame {
 					selectedSecondCharacterArte = (Arte) secondCharacterArtes.getSelectedItem();
 
 					updateResultTable();
-
-					pack();
 				}
 			}
 		});

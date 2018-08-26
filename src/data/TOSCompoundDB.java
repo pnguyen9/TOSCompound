@@ -213,21 +213,21 @@ public class TOSCompoundDB {
 							"AND c1.name LIKE '" + selectedSecondCharacter + "')) "; //
 
 			String selectedFirstCharacterArteCondition = //
-					"AND ((a1.name LIKE '" + selectedFirstCharacterArte + "') " + //
-							"OR (a2.name LIKE '" + selectedFirstCharacterArte + "')) ";//
+					"AND ((a1.name LIKE '" + this.escapeQuote(selectedFirstCharacterArte) + "') " + //
+							"OR (a2.name LIKE '" + this.escapeQuote(selectedFirstCharacterArte) + "')) ";//
 
 			String selectedSecondCharacterArteCondition = //
-					"AND ((a2.name LIKE '" + selectedSecondCharacterArte + "') " + //
-							"OR (a1.name LIKE '" + selectedSecondCharacterArte + "')) ";//
+					"AND ((a2.name LIKE '" + this.escapeQuote(selectedSecondCharacterArte) + "') " + //
+							"OR (a1.name LIKE '" + this.escapeQuote(selectedSecondCharacterArte) + "')) ";//
 
 			String selectedArtesCondition = //
-					"AND ((a1.name LIKE '" + selectedFirstCharacterArte + "' " + //
-							"AND a2.name LIKE '" + selectedSecondCharacterArte + "') " + //
-							"OR (a2.name LIKE '" + selectedFirstCharacterArte + "' " + //
-							"AND a1.name LIKE '" + selectedSecondCharacterArte + "')) "; //
+					"AND ((a1.name LIKE '" + this.escapeQuote(selectedFirstCharacterArte) + "' " + //
+							"AND a2.name LIKE '" + this.escapeQuote(selectedSecondCharacterArte) + "') " + //
+							"OR (a2.name LIKE '" + this.escapeQuote(selectedFirstCharacterArte) + "' " + //
+							"AND a1.name LIKE '" + this.escapeQuote(selectedSecondCharacterArte) + "')) "; //
 
 			String selectedCompoundArteCondition = //
-					"AND a3.name LIKE '" + selectedCompoundArte + "' ";
+					"AND a3.name LIKE '" + this.escapeQuote(selectedCompoundArte) + "' ";
 
 			if (!(isBlankString(selectedFirstCharacter) || isBlankString(selectedSecondCharacter))) {
 				query += selectedCharactersCondition;
@@ -281,6 +281,15 @@ public class TOSCompoundDB {
 		}
 
 		return queryResults;
+	}
+
+	// Ugly fix for parameter with a quote, because preparedStatement can't work
+	// with the way it was done
+	private String escapeQuote(String parameter) {
+		if (parameter.contains("'")) {
+			return parameter.replace("'", "''");
+		}
+		return parameter;
 	}
 
 	public Connection getConnection() {
